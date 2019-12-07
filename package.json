@@ -1,0 +1,10 @@
+{
+  "name": "com.failsafegames.tweener",
+  "version": "1.0.0",
+  "displayName": "Tweener",
+  "description": "Very simple tween for Sprite and TextMeshPro",
+  "unity": "2019.3",
+  "dependencies": {
+    
+  }
+}
