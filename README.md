@@ -1,5 +1,5 @@
 # unity-tweener
-Very simple tween for GameObject, Sprite and TextMeshPro in UNity.
+Very simple tween for GameObject, Sprite and TextMeshPro in Unity.
 
 [Read more](http://robertpenner.com/easing/) about Tween.
 
