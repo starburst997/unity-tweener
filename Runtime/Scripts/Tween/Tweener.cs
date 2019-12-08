@@ -11,7 +11,7 @@ using UnityEngine;
  *
  * Heavily inspired by shohei909 TweenX library
  */
-namespace Components.Tween
+namespace Tween
 {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum Property
@@ -57,7 +57,7 @@ namespace Components.Tween
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Tweener : MonoBehaviour
     {
-        [SerializeField] [NotNull] private List<Tween> tweens = new List<Tween>();
+        [NotNull] private List<Tween> tweens = new List<Tween>();
 
         [NotNull] private readonly Dictionary<Property, Tween> _tweenMap = new Dictionary<Property, Tween>();
 
@@ -70,6 +70,7 @@ namespace Components.Tween
         // For alpha tween
         private SpriteRenderer[] _renderers;
         private TextMeshProUGUI[] _texts;
+        private TextMeshPro[] _texts2;
 
         private readonly List<Tween> _pending = new List<Tween>();
         private float _pendingAlpha = -1f;
@@ -82,11 +83,13 @@ namespace Components.Tween
             // For alpha we also need to look up all children
             var renderers = new List<SpriteRenderer>();
             var texts = new List<TextMeshProUGUI>();
+            var texts2 = new List<TextMeshPro>();
 
-            CheckChild(gameObject, renderers, texts);
+            CheckChild(gameObject, renderers, texts, texts2);
 
             _renderers = renderers.ToArray();
             _texts = texts.ToArray();
+            _texts2 = texts2.ToArray();
 
             // Update alpha property on pending
             var value = 1.0f;
@@ -97,7 +100,7 @@ namespace Components.Tween
                 _pendingAlpha = -1f;
             }
 
-            if (_renderers.Length > 0 || _texts.Length > 0)
+            if (_renderers.Length > 0 || _texts.Length > 0 || _texts2.Length > 0)
             {
                 foreach (var tween in _pending)
                 {
@@ -109,6 +112,10 @@ namespace Components.Tween
                     {
                         value = _texts[0].alpha;
                     }
+                    else if (_texts2.Length > 0)
+                    {
+                        value = _texts2[0].alpha;
+                    }
 
                     tween.start = value;
                 }
@@ -117,17 +124,19 @@ namespace Components.Tween
             _pending.Clear();
         }
 
-        private void CheckChild(GameObject obj, List<SpriteRenderer> renderers, List<TextMeshProUGUI> texts)
+        private void CheckChild(GameObject obj, List<SpriteRenderer> renderers, List<TextMeshProUGUI> texts, List<TextMeshPro> texts2)
         {
             var sprite = obj.GetComponent<SpriteRenderer>();
             var text = obj.GetComponent<TextMeshProUGUI>();
+            var text2 = obj.GetComponent<TextMeshPro>();
 
             if (sprite != null) renderers.Add(sprite);
             if (text != null) texts.Add(text);
+            if (text2 != null) texts2.Add(text2);
 
             foreach (Transform child in obj.transform)
             {
-                CheckChild(child.gameObject, renderers, texts);
+                CheckChild(child.gameObject, renderers, texts, texts2);
             }
         }
 
@@ -183,7 +192,7 @@ namespace Components.Tween
 
         public void SetAlpha(float value)
         {
-            if (_renderers == null || _texts == null)
+            if (_renderers == null || _texts == null || _texts2 == null)
             {
                 _pendingAlpha = value;
                 return;
@@ -197,6 +206,11 @@ namespace Components.Tween
             }
 
             foreach (var text in _texts)
+            {
+                text.alpha = value;
+            }
+            
+            foreach (var text in _texts2)
             {
                 text.alpha = value;
             }
@@ -222,8 +236,7 @@ namespace Components.Tween
         {
             var o = gameObject;
             var vector3 = o.transform.rotation.eulerAngles;
-            vector3.z = value;
-            o.transform.rotation = Quaternion.Euler(vector3);
+            o.transform.rotation = Quaternion.Euler(new Vector3(vector3.x, vector3.y, value));
         }
 
         public void SetScaleX(float value)
@@ -257,7 +270,7 @@ namespace Components.Tween
 
         public void Alpha(float to, float duration = 0.25f, Easing ease = Easing.Linear, bool complete = true)
         {
-            if (HasStarted && (_renderers == null || _renderers.Length == 0) && (_texts == null || _texts.Length == 0))
+            if (HasStarted && (_renderers == null || _renderers.Length == 0) && (_texts == null || _texts.Length == 0) && (_texts2 == null || _texts2.Length == 0))
                 return;
 
             var value = 1.0f;
@@ -267,9 +280,15 @@ namespace Components.Tween
                 {
                     value = _renderers[0].color.a;
                 }
-                else if (_texts.Length > 0)
+                
+                if (_texts.Length > 0)
                 {
                     value = _texts[0].alpha;
+                }
+                
+                if (_texts2.Length > 0)
+                {
+                    value = _texts2[0].alpha;
                 }
             }
 
@@ -286,10 +305,11 @@ namespace Components.Tween
 
         public void X(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
         {
+            float start = gameObject.transform.localPosition.x;
             Remove(Property.X, complete);
             Add(new Tween(
                 Property.X,
-                gameObject.transform.localPosition.x,
+                start,
                 to,
                 duration,
                 ease));
@@ -297,10 +317,11 @@ namespace Components.Tween
 
         public void Y(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
         {
+            float start = gameObject.transform.localPosition.y;
             Remove(Property.Y, complete);
             Add(new Tween(
                 Property.Y,
-                gameObject.transform.localPosition.y,
+                start,
                 to,
                 duration,
                 ease));
@@ -308,10 +329,11 @@ namespace Components.Tween
 
         public void ScaleX(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
         {
+            float start = gameObject.transform.localScale.x;
             Remove(Property.ScaleX, complete);
             Add(new Tween(
                 Property.ScaleX,
-                gameObject.transform.localScale.x,
+                start,
                 to,
                 duration,
                 ease));
@@ -319,10 +341,11 @@ namespace Components.Tween
 
         public void ScaleY(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
         {
+            float start = gameObject.transform.localScale.y;
             Remove(Property.ScaleY, complete);
             Add(new Tween(
                 Property.ScaleY,
-                gameObject.transform.localScale.y,
+                start,
                 to,
                 duration,
                 ease));
@@ -330,10 +353,11 @@ namespace Components.Tween
 
         public void Rotation(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
         {
+            float start = gameObject.transform.rotation.eulerAngles.z;
             Remove(Property.Rotation, complete);
             Add(new Tween(
                 Property.Rotation,
-                gameObject.transform.rotation.eulerAngles.z,
+                start,
                 to,
                 duration,
                 ease));
@@ -354,7 +378,7 @@ namespace Components.Tween
 
         private void Add(Tween tween)
         {
-            Remove(tween.property);
+            Remove(tween.property, false);
 
             tweens.Add(tween);
             _tweenMap[tween.property] = tween;
@@ -366,6 +390,7 @@ namespace Components.Tween
 
             _renderers = null;
             _texts = null;
+            _texts2 = null;
         }
     }
 }

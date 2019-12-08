@@ -9,7 +9,7 @@ using UnityEngine;
  *
  * Heavily inspired by shohei909 TweenX library
  */
-namespace Components.Tween
+namespace Tween
 {
     public enum Easing
     {
@@ -594,7 +594,7 @@ namespace Components.Tween
 
             if ((t *= 2f) < 1f)
             {
-                return 0.5f * (t * t * (((Overshoot * 0.984375f) + 1f) * t - Overshoot * 1.525f));
+                return 0.5f * (t * t * (((Overshoot * 1.525f) + 1f) * t - Overshoot * 1.525f));
             }
 
             return 0.5f * ((t -= 2f) * t * (((Overshoot * 1.525f) + 1f) * t + Overshoot * 1.525f) + 2f);
