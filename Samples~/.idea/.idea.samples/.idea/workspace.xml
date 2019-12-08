@@ -8,6 +8,131 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="GotoFileConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name=".tfignore" />
+      <filtered-out-file-type name="ActionScript" />
+      <filtered-out-file-type name="Angular2Html" />
+      <filtered-out-file-type name="Application Manifest File" />
+      <filtered-out-file-type name="AsmDef" />
+      <filtered-out-file-type name="Asp" />
+      <filtered-out-file-type name="AspectJ" />
+      <filtered-out-file-type name="Asxx" />
+      <filtered-out-file-type name="Blazor" />
+      <filtered-out-file-type name="C++" />
+      <filtered-out-file-type name="Cg" />
+      <filtered-out-file-type name="CoffeeScript" />
+      <filtered-out-file-type name="Config" />
+      <filtered-out-file-type name="Cookie storage file" />
+      <filtered-out-file-type name="Csproj" />
+      <filtered-out-file-type name="CSS" />
+      <filtered-out-file-type name="Cucumber" />
+      <filtered-out-file-type name="Dictionary" />
+      <filtered-out-file-type name="Dockerfile" />
+      <filtered-out-file-type name="DTD" />
+      <filtered-out-file-type name="ECMAScript 6" />
+      <filtered-out-file-type name="EditorConfig" />
+      <filtered-out-file-type name="Erlang" />
+      <filtered-out-file-type name="F#" />
+      <filtered-out-file-type name="F# Script" />
+      <filtered-out-file-type name="Filtered Solution File" />
+      <filtered-out-file-type name="Flow" />
+      <filtered-out-file-type name="Fsproj" />
+      <filtered-out-file-type name="GitIgnore file" />
+      <filtered-out-file-type name="Handlebars/Mustache" />
+      <filtered-out-file-type name="Haskell" />
+      <filtered-out-file-type name="HgIgnore file" />
+      <filtered-out-file-type name="HTML" />
+      <filtered-out-file-type name="HTTP Request" />
+      <filtered-out-file-type name="IDEA Backend File" />
+      <filtered-out-file-type name="IDEA_MODULE" />
+      <filtered-out-file-type name="IDEA_PROJECT" />
+      <filtered-out-file-type name="IDEA_WORKSPACE" />
+      <filtered-out-file-type name="IDL" />
+      <filtered-out-file-type name="IgnoreLang file" />
+      <filtered-out-file-type name="IL" />
+      <filtered-out-file-type name="Jade" />
+      <filtered-out-file-type name="JavaFX" />
+      <filtered-out-file-type name="JavaScript" />
+      <filtered-out-file-type name="Jest Snapshot" />
+      <filtered-out-file-type name="JQL" />
+      <filtered-out-file-type name="JSCS" />
+      <filtered-out-file-type name="JSHint" />
+      <filtered-out-file-type name="JSON" />
+      <filtered-out-file-type name="JSON5" />
+      <filtered-out-file-type name="JSP" />
+      <filtered-out-file-type name="JSX Harmony" />
+      <filtered-out-file-type name="Less" />
+      <filtered-out-file-type name="Literate CoffeeScript" />
+      <filtered-out-file-type name="Manifest File" />
+      <filtered-out-file-type name="Markdown" />
+      <filtered-out-file-type name="MsBuild targets file" />
+      <filtered-out-file-type name="NuGet spec" />
+      <filtered-out-file-type name="PATCH" />
+      <filtered-out-file-type name="Perl" />
+      <filtered-out-file-type name="PHP" />
+      <filtered-out-file-type name="PLAIN_TEXT" />
+      <filtered-out-file-type name="Project file" />
+      <filtered-out-file-type name="Project file properties" />
+      <filtered-out-file-type name="Properties" />
+      <filtered-out-file-type name="Property list" />
+      <filtered-out-file-type name="Publish Profile file" />
+      <filtered-out-file-type name="Razor" />
+      <filtered-out-file-type name="RegExp" />
+      <filtered-out-file-type name="Resources" />
+      <filtered-out-file-type name="RNG Compact" />
+      <filtered-out-file-type name="RuleSet" />
+      <filtered-out-file-type name="Sass" />
+      <filtered-out-file-type name="Scratch" />
+      <filtered-out-file-type name="SCSS" />
+      <filtered-out-file-type name="ShaderLab" />
+      <filtered-out-file-type name="Shproj" />
+      <filtered-out-file-type name="Solution File" />
+      <filtered-out-file-type name="SourceMap" />
+      <filtered-out-file-type name="SQL" />
+      <filtered-out-file-type name="Storyboard" />
+      <filtered-out-file-type name="Stylus" />
+      <filtered-out-file-type name="SVG" />
+      <filtered-out-file-type name="T4 File" />
+      <filtered-out-file-type name="textmate" />
+      <filtered-out-file-type name="TPS File" />
+      <filtered-out-file-type name="tsconfig" />
+      <filtered-out-file-type name="TypeScript" />
+      <filtered-out-file-type name="TypeScript JSX" />
+      <filtered-out-file-type name="Unity YAML" />
+      <filtered-out-file-type name="Vbproj" />
+      <filtered-out-file-type name="Vcxproj" />
+      <filtered-out-file-type name="Visual Basic" />
+      <filtered-out-file-type name="Vue.js" />
+      <filtered-out-file-type name="XAML" />
+      <filtered-out-file-type name="XHTML" />
+      <filtered-out-file-type name="Xib files" />
+      <filtered-out-file-type name="XML" />
+      <filtered-out-file-type name="Xproj" />
+      <filtered-out-file-type name="YAML" />
+      <filtered-out-file-type name="yarn.lock" />
+      <filtered-out-file-type name="Angular Metadata JSON" />
+      <filtered-out-file-type name="ARCHIVE" />
+      <filtered-out-file-type name="Binary Application Markup" />
+      <filtered-out-file-type name="Binary file" />
+      <filtered-out-file-type name="Cache file" />
+      <filtered-out-file-type name="Certificate file" />
+      <filtered-out-file-type name="Database Element" />
+      <filtered-out-file-type name="DATASOURCE_STORAGE" />
+      <filtered-out-file-type name="dependency diagram" />
+      <filtered-out-file-type name="Executable" />
+      <filtered-out-file-type name="H2 Database" />
+      <filtered-out-file-type name="Image" />
+      <filtered-out-file-type name="Library" />
+      <filtered-out-file-type name="Native" />
+      <filtered-out-file-type name="Program database" />
+      <filtered-out-file-type name="ResourceBundle" />
+      <filtered-out-file-type name="SQLite Database" />
+      <filtered-out-file-type name="Strong name key" />
+      <filtered-out-file-type name="UML" />
+      <filtered-out-file-type name="UNKNOWN" />
+    </file-type-list>
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../unity-tweener/Runtime/Scripts/Tween/Tweener.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Test.cs" root0="FORCE_HIGHLIGHTING" />
@@ -21,6 +146,7 @@
         <option value="$PROJECT_DIR$/../../unity-tweener/Runtime/Scripts/Tween/Easing.cs" />
         <option value="$PROJECT_DIR$/../../unity-tweener/Runtime/Scripts/Tween/Tweener.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Test.cs" />
+        <option value="$PROJECT_DIR$/../../unity-tweener/README.md" />
       </list>
     </option>
   </component>
@@ -71,7 +197,7 @@
       <updated>1575754079033</updated>
       <workItem from="1575754081422" duration="58000" />
       <workItem from="1575754149183" duration="924000" />
-      <workItem from="1575755083738" duration="7943000" />
+      <workItem from="1575755083738" duration="9577000" />
     </task>
     <servers />
   </component>
