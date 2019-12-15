@@ -19,9 +19,11 @@ namespace Tween
         Alpha,
         X,
         Y,
+        Z,
         Rotation,
         ScaleX,
-        ScaleY
+        ScaleY,
+        ScaleZ
     }
 
     [Serializable]
@@ -57,7 +59,7 @@ namespace Tween
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Tweener : MonoBehaviour
     {
-        [NotNull] private List<Tween> tweens = new List<Tween>();
+        [NotNull] private readonly List<Tween> _tweens = new List<Tween>();
 
         [NotNull] private readonly Dictionary<Property, Tween> _tweenMap = new Dictionary<Property, Tween>();
 
@@ -65,29 +67,33 @@ namespace Tween
 
         [NonSerialized] public bool HasStarted;
 
-        public bool snap;
+        public bool Snap;
 
         // For alpha tween
         private SpriteRenderer[] _renderers;
+        private Renderer[] _renderers2;
         private TextMeshProUGUI[] _texts;
         private TextMeshPro[] _texts2;
 
         private readonly List<Tween> _pending = new List<Tween>();
         private float _pendingAlpha = -1f;
+        private static readonly int Color = Shader.PropertyToID("_Color");
 
         public void Start()
         {
             HasStarted = true;
-            foreach (var tween in tweens) _tweenMap[tween.property] = tween;
+            foreach (var tween in _tweens) _tweenMap[tween.property] = tween;
 
             // For alpha we also need to look up all children
             var renderers = new List<SpriteRenderer>();
+            var renderers2 = new List<Renderer>();
             var texts = new List<TextMeshProUGUI>();
             var texts2 = new List<TextMeshPro>();
-
-            CheckChild(gameObject, renderers, texts, texts2);
+            
+            CheckChild(gameObject, renderers, renderers2, texts, texts2);
 
             _renderers = renderers.ToArray();
+            _renderers2 = renderers2.ToArray();
             _texts = texts.ToArray();
             _texts2 = texts2.ToArray();
 
@@ -100,13 +106,17 @@ namespace Tween
                 _pendingAlpha = -1f;
             }
 
-            if (_renderers.Length > 0 || _texts.Length > 0 || _texts2.Length > 0)
+            if (_renderers.Length > 0 || _renderers2.Length > 0 || _texts.Length > 0 || _texts2.Length > 0)
             {
                 foreach (var tween in _pending)
                 {
                     if (_renderers.Length > 0)
                     {
                         value = _renderers[0].color.a;
+                    }
+                    else if (_renderers2.Length > 0)
+                    {
+                        value = _renderers2[0].material.color.a;
                     }
                     else if (_texts.Length > 0)
                     {
@@ -124,19 +134,21 @@ namespace Tween
             _pending.Clear();
         }
 
-        private void CheckChild(GameObject obj, List<SpriteRenderer> renderers, List<TextMeshProUGUI> texts, List<TextMeshPro> texts2)
+        private void CheckChild(GameObject obj, List<SpriteRenderer> renderers, List<Renderer> renderers2, List<TextMeshProUGUI> texts, List<TextMeshPro> texts2)
         {
             var sprite = obj.GetComponent<SpriteRenderer>();
+            var renderer = obj.GetComponent<Renderer>();
             var text = obj.GetComponent<TextMeshProUGUI>();
             var text2 = obj.GetComponent<TextMeshPro>();
 
             if (sprite != null) renderers.Add(sprite);
+            if (renderer != null) renderers2.Add(renderer);
             if (text != null) texts.Add(text);
             if (text2 != null) texts2.Add(text2);
 
             foreach (Transform child in obj.transform)
             {
-                CheckChild(child.gameObject, renderers, texts, texts2);
+                CheckChild(child.gameObject, renderers, renderers2, texts, texts2);
             }
         }
 
@@ -144,7 +156,7 @@ namespace Tween
         {
             RemoveAll();
 
-            foreach (var tween in tweens)
+            foreach (var tween in _tweens)
             {
                 tween.time += Time.deltaTime;
                 if (tween.time >= tween.duration)
@@ -176,6 +188,9 @@ namespace Tween
                 case Property.Y:
                     SetY(value);
                     break;
+                case Property.Z:
+                    SetZ(value);
+                    break;
                 case Property.Rotation:
                     SetRotation(value);
                     break;
@@ -184,6 +199,9 @@ namespace Tween
                     break;
                 case Property.ScaleY:
                     SetScaleY(value);
+                    break;
+                case Property.ScaleZ:
+                    SetScaleZ(value);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -204,6 +222,18 @@ namespace Tween
                 color.a = value;
                 sprite.color = color;
             }
+            
+            foreach (var renderer in _renderers2)
+            {
+                var color = renderer.material.color;
+                color.a = value;
+
+                renderer.material.color = color;
+
+                /*MaterialPropertyBlock props = new MaterialPropertyBlock();
+                props.SetColor(Color, color);
+                renderer.SetPropertyBlock(props);*/
+            }
 
             foreach (var text in _texts)
             {
@@ -220,7 +250,7 @@ namespace Tween
         {
             var o = gameObject;
             var vector3 = o.transform.localPosition;
-            vector3.x = snap ? (int) value : value;
+            vector3.x = Snap ? (int) value : value;
             o.transform.localPosition = vector3;
         }
 
@@ -228,7 +258,15 @@ namespace Tween
         {
             var o = gameObject;
             var vector3 = o.transform.localPosition;
-            vector3.y = snap ? (int) value : value;
+            vector3.y = Snap ? (int) value : value;
+            o.transform.localPosition = vector3;
+        }
+        
+        public void SetZ(float value)
+        {
+            var o = gameObject;
+            var vector3 = o.transform.localPosition;
+            vector3.z = Snap ? (int) value : value;
             o.transform.localPosition = vector3;
         }
 
@@ -254,23 +292,31 @@ namespace Tween
             vector3.y = value;
             o.transform.localScale = vector3;
         }
+        
+        public void SetScaleZ(float value)
+        {
+            var o = gameObject;
+            var vector3 = o.transform.localScale;
+            vector3.z = value;
+            o.transform.localScale = vector3;
+        }
 
         public IEnumerable<Tween> GetTweens(Property property)
         {
-            return tweens.Where(tween => tween.property == property);
+            return _tweens.Where(tween => tween.property == property);
         }
 
         private void RemoveAll()
         {
             if (_toRemove.Count <= 0) return;
 
-            foreach (var tween in _toRemove) tweens.Remove(tween);
+            foreach (var tween in _toRemove) _tweens.Remove(tween);
             _toRemove.Clear();
         }
 
         public void Alpha(float to, float duration = 0.25f, Easing ease = Easing.Linear, bool complete = true)
         {
-            if (HasStarted && (_renderers == null || _renderers.Length == 0) && (_texts == null || _texts.Length == 0) && (_texts2 == null || _texts2.Length == 0))
+            if (HasStarted && (_renderers == null || _renderers.Length == 0) && (_renderers2 == null || _renderers2.Length == 0) && (_texts == null || _texts.Length == 0) && (_texts2 == null || _texts2.Length == 0))
                 return;
 
             var value = 1.0f;
@@ -279,6 +325,11 @@ namespace Tween
                 if (_renderers.Length > 0)
                 {
                     value = _renderers[0].color.a;
+                }
+                
+                if (_renderers2.Length > 0)
+                {
+                    value = _renderers2[0].material.color.a;
                 }
                 
                 if (_texts.Length > 0)
@@ -326,6 +377,18 @@ namespace Tween
                 duration,
                 ease));
         }
+        
+        public void Z(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
+        {
+            float start = gameObject.transform.localPosition.z;
+            Remove(Property.Z, complete);
+            Add(new Tween(
+                Property.Z,
+                start,
+                to,
+                duration,
+                ease));
+        }
 
         public void ScaleX(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
         {
@@ -345,6 +408,18 @@ namespace Tween
             Remove(Property.ScaleY, complete);
             Add(new Tween(
                 Property.ScaleY,
+                start,
+                to,
+                duration,
+                ease));
+        }
+        
+        public void ScaleZ(float to, float duration = 0.25f, Easing ease = Easing.ExpoOut, bool complete = true)
+        {
+            float start = gameObject.transform.localScale.z;
+            Remove(Property.ScaleZ, complete);
+            Add(new Tween(
+                Property.ScaleZ,
                 start,
                 to,
                 duration,
@@ -380,7 +455,7 @@ namespace Tween
         {
             Remove(tween.property, false);
 
-            tweens.Add(tween);
+            _tweens.Add(tween);
             _tweenMap[tween.property] = tween;
         }
 
@@ -389,6 +464,7 @@ namespace Tween
             RemoveAll();
 
             _renderers = null;
+            _renderers2 = null;
             _texts = null;
             _texts2 = null;
         }
